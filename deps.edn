@@ -1,0 +1,7 @@
+{:paths ["src" "resources"]
+ :deps {;; Config
+        aero/aero {:mvn/version "1.1.6"}
+        ;; Data Schema
+        metosin/malli {:mvn/version "0.13.0"}
+        
+        }}
