@@ -4,10 +4,10 @@
             [malli.core :as m]
             [malli.error :as me]))
 
-(def Schema 
+(def ^:private Schema 
   [:map 
    [:app/profile [:enum :dev :prod]]
-   [:webserver/port int?]])
+   [:web-server/port int?]])
 
 (defn read-config [profile]
   (let [config (aero/read-config (io/resource "config.edn") {:profile profile})]
