@@ -1,17 +1,25 @@
 (ns contact.infra.system
   (:require [contact.infra.config :as config]
-            [contact.infra.web-server :as web-server]))
+            [contact.infra.web-server :as web-server]
+            [mount.core :as mount]))
+
+(mount/defstate config
+  :start (config/read-config (:profile (mount/args))))
+
+(defn- system []
+  #:system {:config config})
+
+(mount/defstate web-server
+  :start (web-server/start (system))
+  :stop (web-server/stop web-server))
 
 (defn start [profile]
-  (let [config (config/read-config profile)
-        system #:system {:config config}
-        web-server (web-server/start system)]
-    (assoc system :system/web-server web-server)))
+  (mount/start-with-args {:profile profile}))
 
-(defn stop [{:system/keys [web-server]}]
-  (web-server/stop web-server))
+(defn stop []
+  (mount/stop))
 
 (comment 
   (def system (start :dev))
-  (stop system)
+  (stop)
   )
