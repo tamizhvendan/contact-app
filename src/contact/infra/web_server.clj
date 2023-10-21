@@ -14,6 +14,6 @@
   (.close web-server))
 
 (comment 
-  (def server (start {:system/config {:web-server/port 8001}}))
+  (def server (start #:system {:config {:web-server/port 6060}}))
   (stop server)
   )
