@@ -4,8 +4,8 @@
             [malli.core :as m]
             [malli.error :as me]))
 
-(def ^:private Schema 
-  [:map 
+(def ^:private Schema
+  [:map
    [:app/profile [:enum :dev :prod]]
    [:web-server/port int?]])
 
@@ -16,6 +16,5 @@
       (let [err (me/humanize (m/explain Schema config))]
         (throw (ex-info (str "invalid configuration: " err) err))))))
 
-(comment 
-  (read-config :dev)
-  )
+(comment
+  (read-config :dev))

@@ -13,7 +13,6 @@
 (defn stop [web-server]
   (.close web-server))
 
-(comment 
+(comment
   (def server (start #:system {:config {:web-server/port 6060}}))
-  (stop server)
-  )
+  (stop server))

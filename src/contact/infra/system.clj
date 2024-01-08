@@ -19,7 +19,6 @@
 (defn stop []
   (mount/stop))
 
-(comment 
+(comment
   (def system (start :dev))
-  (stop)
-  )
+  (stop))
