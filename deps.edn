@@ -22,6 +22,10 @@
            :fix-fmt {:extra-deps {io.github.weavejester/cljfmt {:git/tag "0.12.0" :git/sha "434408f"}}
                      :main-opts ["-m" "cljfmt-runner.fix"]
                      :exec-fn cljfmt.tool/fix}
+           ; clj -M:kibit
+           :kibit {:extra-deps {jonase/kibit {:mvn/version "0.1.6"}}
+                   :main-opts ["-e"
+                               "(require,'[kibit.driver,:as,k]),(k/external-run,[\"src\",\"test\"],nil)"]}
            ; clojure -M:test:lint
            :lint {:extra-deps {jonase/eastwood {:mvn/version "1.4.2"}}
                   :main-opts ["-m" "eastwood.lint" {:add-linters [:unused-locals :unused-namespaces
