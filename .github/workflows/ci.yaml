@@ -21,33 +21,20 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Cache Clojure install
-        id: cache-clojure
-        uses: actions/cache@v2
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@12.2
         with:
-          path: ~/bin/clojure
-          key: ${{ env.CLOJURE_VERSION }}
+          cli: 1.11.1.1435
 
-      - name: Set up Clojure
-        if: steps.cache-clojure.outputs.cache-hit != 'true'
-        run: |
-          curl -O https://download.clojure.org/install/posix-install-${CLOJURE_VERSION}.sh
-          chmod +x posix-install-${CLOJURE_VERSION}.sh
-          sudo ./posix-install-${CLOJURE_VERSION}.sh --prefix ~/bin/clojure
-
-      - name: Add Clojure to path
-        run: echo "$HOME/bin/clojure/bin" >> $GITHUB_PATH
-
-      - name: Cache maven artifacts
-        id: cache-maven
-        uses: actions/cache@v2
+      - name: Cache clojure dependencies
+        uses: actions/cache@v3
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-${{ hashFiles('deps.edn') }}
-
-      - name: Download dependencies
-        if: steps.cache-maven.outputs.cache-hit != 'true'
-        run: clojure -A:test -Stree
+          path: |
+            ~/.m2/repository
+            ~/.gitlibs
+            ~/.deps.clj
+          key: cljdeps-${{ hashFiles('deps.edn') }}
+          restore-keys: cljdeps-
 
       - name: Run tests
         run: clojure -X:test
