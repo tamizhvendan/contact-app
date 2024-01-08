@@ -1,7 +1,7 @@
 (ns contact.infra.web-server
   (:require [aleph.http :as http]))
 
-(defn handler [req]
+(defn handler [_]
   {:status 200
    :headers {"content-type" "text/plain"}
    :body "hello!"})
@@ -10,7 +10,7 @@
   (http/start-server handler {:port (:web-server/port config)
                               :shutdown-timeout 0}))
 
-(defn stop [web-server]
+(defn stop [^java.io.Closeable web-server]
   (.close web-server))
 
 (comment

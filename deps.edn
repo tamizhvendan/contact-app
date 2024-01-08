@@ -21,4 +21,8 @@
            ; clj -X:fix-fmt
            :fix-fmt {:extra-deps {io.github.weavejester/cljfmt {:git/tag "0.12.0" :git/sha "434408f"}}
                      :main-opts ["-m" "cljfmt-runner.fix"]
-                     :exec-fn cljfmt.tool/fix}}}
+                     :exec-fn cljfmt.tool/fix}
+           ; clojure -M:test:lint
+           :lint {:extra-deps {jonase/eastwood {:mvn/version "1.4.2"}}
+                  :main-opts ["-m" "eastwood.lint" {:add-linters [:unused-locals :unused-namespaces
+                                                                  :unused-fn-args]}]}}}
