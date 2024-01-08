@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CLOJURE_VERSION: 1.11.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Cache Clojure install
+        id: cache-clojure
+        uses: actions/cache@v2
+        with:
+          path: ~/bin/clojure
+          key: ${{ env.CLOJURE_VERSION }}
+
+      - name: Set up Clojure
+        if: steps.cache-clojure.outputs.cache-hit != 'true'
+        run: |
+          curl -O https://download.clojure.org/install/linux-install-${CLOJURE_VERSION}.sh
+          chmod +x linux-install-${CLOJURE_VERSION}.sh
+          sudo ./linux-install-${CLOJURE_VERSION}.sh --prefix ~/bin/clojure
+
+      - name: Add Clojure to path
+        run: echo "$HOME/bin/clojure/bin" >> $GITHUB_PATH
+
+      - name: Cache maven artifacts
+        id: cache-maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-${{ hashFiles('deps.edn') }}
+
+      - name: Download dependencies
+        if: steps.cache-maven.outputs.cache-hit != 'true'
+        run: clojure -A:test -Stree
+
+      - name: Run tests
+        run: clojure -X:test
