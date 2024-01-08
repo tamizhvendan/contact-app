@@ -36,5 +36,11 @@ jobs:
           key: cljdeps-${{ hashFiles('deps.edn') }}
           restore-keys: cljdeps-
 
+      - name: Run Format Check
+        run: clojure -X:fmt
+
+      - name: Run Lint
+        run: clojure -M:test:lint && clojure -M:kibit
+
       - name: Run tests
         run: clojure -X:test
